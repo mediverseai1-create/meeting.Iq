@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Check } from 'lucide-react'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Pricing · MeetingIQ' }
+export const metadata: Metadata = { title: 'Pricing' }
 
 const PLANS = [
   {

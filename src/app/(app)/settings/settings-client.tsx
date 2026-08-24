@@ -74,8 +74,8 @@ export function SettingsClient({ profile, subscription, userEmail }: Props) {
     pro: 'bg-purple-100 text-purple-700',
   }
 
-  const starterLink = process.env.NEXT_PUBLIC_STARTER_LINK || process.env.NEXT_PUBLIC_APP_URL + '/pricing'
-  const proLink = process.env.NEXT_PUBLIC_PRO_LINK || process.env.NEXT_PUBLIC_APP_URL + '/pricing'
+  const starterLink = process.env.NEXT_PUBLIC_STARTER_PAYMENT_LINK || '/pricing'
+  const proLink = process.env.NEXT_PUBLIC_PRO_PAYMENT_LINK || '/pricing'
 
   return (
     <div className="p-6 max-w-3xl mx-auto">

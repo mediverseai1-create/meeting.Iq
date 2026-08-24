@@ -19,7 +19,7 @@ export async function enhanceNotes(params: {
   meetingType?: string
   context?: string
 }): Promise<string> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const prompt = `You are an expert meeting note-taker. Enhance and organize these raw meeting notes while preserving the original intent.
 
@@ -58,7 +58,7 @@ export async function generateSummary(params: {
   important_quotes: string[]
   topics: string[]
 }> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const content = [
     params.notes,
@@ -116,7 +116,7 @@ export async function extractActionItems(params: {
   notes: string
   transcript?: string
 }): Promise<Array<{ title: string; assignee?: string; due_date?: string; priority: string }>> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const prompt = `Extract action items from this meeting content.
 
@@ -160,7 +160,7 @@ export async function askAboutMeeting(params: {
   insights?: string
   meetingTitle: string
 }): Promise<string> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const prompt = `You are answering questions about a specific meeting based only on the available meeting data.
 
@@ -192,7 +192,7 @@ export async function generateFollowUp(params: {
   meetingTitle: string
   participants?: string[]
 }): Promise<{ email: string; recap: string }> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const prompt = `Generate a professional follow-up email and meeting recap based on this meeting data.
 
@@ -241,7 +241,7 @@ export async function crossMeetingQuery(params: {
   question: string
   meetingsData: string
 }): Promise<string> {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
 
   const prompt = `You are analyzing a user's meeting history to answer their question.
 
