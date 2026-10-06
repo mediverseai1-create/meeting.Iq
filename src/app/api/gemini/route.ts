@@ -4,6 +4,7 @@ import {
   enhanceNotes,
   generateSummary,
   extractActionItems,
+  extractMeetingIntelligence,
   askAboutMeeting,
   generateFollowUp,
   crossMeetingQuery,
@@ -105,6 +106,16 @@ export async function POST(request: NextRequest) {
         })
         break
       }
+
+      case 'extract_intelligence':
+        result = await extractMeetingIntelligence({
+          notes: body.notes || '',
+          transcript: body.transcript || '',
+          meetingTitle: body.meetingTitle || 'Meeting',
+          meetingType: body.meetingType || 'general',
+          participants: body.participants || [],
+        })
+        break
 
       default:
         return NextResponse.json({ success: false, error: `Unknown type: ${type}` }, { status: 400 })

@@ -8,16 +8,16 @@ import { cn, getInitials } from '@/lib/utils'
 import type { Profile } from '@/types'
 import {
   LayoutDashboard, Video, FileText, CheckSquare, Lightbulb,
-  Search, LayoutTemplate, Settings, Plus, LogOut, ChevronDown,
-  Mic,
+  Search, LayoutTemplate, Settings, Plus, LogOut, Brain,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Intelligence', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Meetings', href: '/meetings', icon: Video },
-  { label: 'Notes', href: '/notes', icon: FileText },
+  { label: 'Company Memory', href: '/memory', icon: Brain },
   { label: 'Action Items', href: '/action-items', icon: CheckSquare },
   { label: 'Insights', href: '/insights', icon: Lightbulb },
+  { label: 'Notes', href: '/notes', icon: FileText },
   { label: 'Search', href: '/search', icon: Search },
   { label: 'Templates', href: '/templates', icon: LayoutTemplate },
 ]

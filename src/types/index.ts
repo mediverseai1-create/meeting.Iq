@@ -101,6 +101,41 @@ export interface Transcript {
   updated_at: string
 }
 
+export interface Commitment {
+  text: string
+  owner: string
+  deadline?: string
+  type: 'deliverable' | 'call-back' | 'approval' | 'follow-up' | 'other'
+}
+
+export interface Risk {
+  text: string
+  severity: 'low' | 'medium' | 'high'
+  category: string
+}
+
+export interface BuyingSignal {
+  text: string
+  type: 'interest' | 'urgency' | 'budget' | 'authority' | 'need'
+}
+
+export interface Objection {
+  text: string
+  type: string
+  resolved: boolean
+}
+
+export interface OpenIssue {
+  text: string
+  priority: 'low' | 'medium' | 'high'
+}
+
+export interface NextStep {
+  text: string
+  owner?: string
+  deadline?: string
+}
+
 export interface MeetingInsights {
   id: string
   meeting_id: string
@@ -112,9 +147,32 @@ export interface MeetingInsights {
   important_quotes: string[]
   sentiment: string | null
   topics: string[]
+  // Deep intelligence fields (added in migration 002)
+  commitments: Commitment[]
+  risks: Risk[]
+  buying_signals: BuyingSignal[]
+  objections: Objection[]
+  open_issues: OpenIssue[]
+  next_steps: NextStep[]
+  meeting_sentiment: 'positive' | 'neutral' | 'negative' | null
   generated_at: string
   created_at: string
   updated_at: string
+}
+
+export interface MeetingIntelligenceExtraction {
+  executive_summary: string
+  key_points: string[]
+  decisions: string[]
+  open_questions: string[]
+  topics: string[]
+  commitments: Commitment[]
+  risks: Risk[]
+  buying_signals: BuyingSignal[]
+  objections: Objection[]
+  open_issues: OpenIssue[]
+  next_steps: NextStep[]
+  meeting_sentiment: 'positive' | 'neutral' | 'negative'
 }
 
 export type ActionItemStatus = 'open' | 'in_progress' | 'completed' | 'cancelled'
@@ -191,7 +249,7 @@ export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
 }
 
 export interface GeminiRequest {
-  type: 'enhance_notes' | 'generate_summary' | 'extract_actions' | 'ask_question' | 'cross_meeting_query' | 'generate_followup'
+  type: 'enhance_notes' | 'generate_summary' | 'extract_actions' | 'ask_question' | 'cross_meeting_query' | 'generate_followup' | 'extract_intelligence'
   meetingId?: string
   notes?: string
   transcript?: string

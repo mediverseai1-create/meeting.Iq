@@ -237,6 +237,118 @@ Rules:
   }
 }
 
+export async function extractMeetingIntelligence(params: {
+  notes: string
+  transcript?: string
+  meetingTitle: string
+  meetingType?: string
+  participants?: string[]
+}): Promise<import('@/types').MeetingIntelligenceExtraction> {
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.6-flash' })
+
+  const content = [
+    params.notes,
+    params.transcript ? `\n\nTranscript:\n${params.transcript.slice(0, 6000)}` : '',
+  ].join('')
+
+  const isSalesMeeting = ['sales', 'demo', 'discovery', 'proposal', 'negotiation'].includes(params.meetingType || '')
+
+  const prompt = `You are an expert AI business analyst. Perform deep intelligence extraction on this business meeting.
+
+Meeting: ${params.meetingTitle}
+Type: ${params.meetingType || 'general'}
+${params.participants?.length ? `Participants: ${params.participants.join(', ')}` : ''}
+
+Content:
+${content}
+
+Extract ALL of the following in a single JSON response:
+
+{
+  "executive_summary": "3-4 sentence executive summary focused on outcomes and decisions",
+  "key_points": ["top 5 most important discussion points"],
+  "decisions": ["explicit decisions that were made — only actual decisions, not discussions"],
+  "open_questions": ["questions raised but not resolved"],
+  "topics": ["main topics discussed"],
+  "commitments": [
+    {
+      "text": "what was committed to",
+      "owner": "person who made the commitment",
+      "deadline": "YYYY-MM-DD or null",
+      "type": "deliverable|call-back|approval|follow-up|other"
+    }
+  ],
+  "risks": [
+    {
+      "text": "description of the risk",
+      "severity": "low|medium|high",
+      "category": "technical|timeline|budget|resource|relationship|other"
+    }
+  ],
+  "buying_signals": ${isSalesMeeting ? `[
+    {
+      "text": "quote or signal observed",
+      "type": "interest|urgency|budget|authority|need"
+    }
+  ]` : '[]'},
+  "objections": [
+    {
+      "text": "objection or concern raised",
+      "type": "price|timeline|technical|trust|competition|other",
+      "resolved": true or false
+    }
+  ],
+  "open_issues": [
+    {
+      "text": "unresolved issue that needs attention",
+      "priority": "low|medium|high"
+    }
+  ],
+  "next_steps": [
+    {
+      "text": "specific next step",
+      "owner": "person responsible or null",
+      "deadline": "YYYY-MM-DD or null"
+    }
+  ],
+  "meeting_sentiment": "positive|neutral|negative"
+}
+
+Rules:
+- Only extract information explicitly present in the content
+- Commitments must have an identifiable owner
+- Return empty arrays for sections with no content
+- Decisions are definitive choices made, not topics discussed
+- Return ONLY valid JSON, no commentary`
+
+  const result = await model.generateContent(prompt)
+  const text = result.response.text()
+
+  try {
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0])
+    }
+  } catch {
+    // fallback
+  }
+
+  return {
+    executive_summary: text.slice(0, 500),
+    key_points: [],
+    decisions: [],
+    open_questions: [],
+    topics: [],
+    commitments: [],
+    risks: [],
+    buying_signals: [],
+    objections: [],
+    open_issues: [],
+    next_steps: [],
+    meeting_sentiment: 'neutral',
+  }
+}
+
 export async function crossMeetingQuery(params: {
   question: string
   meetingsData: string

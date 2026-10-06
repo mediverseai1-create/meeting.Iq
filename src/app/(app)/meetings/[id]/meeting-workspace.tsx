@@ -10,14 +10,14 @@ import { useToast } from '@/components/ui/toast'
 import { RecordingCapture } from './recording-capture'
 import { AskQuestion } from './ask-question'
 import { FollowUpGenerator } from './follow-up-generator'
+import { IntelligencePanel } from './intelligence-panel'
 import {
-  Mic, FileText, Lightbulb, CheckSquare, Users, Clock,
-  Edit3, Save, Sparkles, Play, Square, ChevronRight, MoreHorizontal,
-  AlertCircle, ArrowLeft, Share, Trash2,
+  Mic, FileText, Lightbulb, CheckSquare, Brain,
+  Edit3, Sparkles, AlertCircle, ArrowLeft, Share, Trash2,
 } from 'lucide-react'
 import Link from 'next/link'
 
-type Tab = 'notes' | 'transcript' | 'insights' | 'actions' | 'followup'
+type Tab = 'notes' | 'transcript' | 'intelligence' | 'insights' | 'actions' | 'followup'
 
 interface Props {
   meeting: Meeting
@@ -130,15 +130,52 @@ export function MeetingWorkspace({ meeting: initialMeeting, notes: initialNotes,
       const data = await res.json()
       if (data.success) {
         const ins = data.result
+        // Run deep intelligence extraction in parallel with action items
+        const [actRes, intRes] = await Promise.all([
+          fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'extract_actions',
+              notes: rawNotes,
+              transcript: transcript?.raw_transcript || '',
+            }),
+          }),
+          fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'extract_intelligence',
+              notes: rawNotes,
+              transcript: transcript?.raw_transcript || '',
+              meetingTitle: meeting.title,
+              meetingType: meeting.meeting_type,
+              participants: meeting.participants,
+            }),
+          }),
+        ])
+
+        const actData = await actRes.json()
+        const intData = await intRes.json()
+        const intel = intData.success ? intData.result : null
+
         const upsertData = {
           meeting_id: meeting.id,
           user_id: meeting.user_id,
-          executive_summary: ins.executive_summary,
-          key_points: ins.key_points,
-          decisions: ins.decisions,
-          open_questions: ins.open_questions,
+          executive_summary: intel?.executive_summary || ins.executive_summary,
+          key_points: intel?.key_points || ins.key_points,
+          decisions: intel?.decisions || ins.decisions,
+          open_questions: intel?.open_questions || ins.open_questions,
           important_quotes: ins.important_quotes,
-          topics: ins.topics,
+          topics: intel?.topics || ins.topics,
+          // Deep intelligence fields
+          commitments: intel?.commitments || [],
+          risks: intel?.risks || [],
+          buying_signals: intel?.buying_signals || [],
+          objections: intel?.objections || [],
+          open_issues: intel?.open_issues || [],
+          next_steps: intel?.next_steps || [],
+          meeting_sentiment: intel?.meeting_sentiment || null,
           generated_at: new Date().toISOString(),
         }
         if (insights?.id) {
@@ -149,17 +186,6 @@ export function MeetingWorkspace({ meeting: initialMeeting, notes: initialNotes,
         }
         setInsights((prev) => prev ? { ...prev, ...upsertData } : upsertData as MeetingInsights)
 
-        // Extract action items
-        const actRes = await fetch('/api/gemini', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'extract_actions',
-            notes: rawNotes,
-            transcript: transcript?.raw_transcript || '',
-          }),
-        })
-        const actData = await actRes.json()
         if (actData.success && actData.result?.length) {
           const items = actData.result.map((item: { title: string; assignee?: string; due_date?: string; priority: string }) => ({
             meeting_id: meeting.id,
@@ -176,8 +202,8 @@ export function MeetingWorkspace({ meeting: initialMeeting, notes: initialNotes,
 
         await supabase.from('meetings').update({ status: 'completed' }).eq('id', meeting.id)
         setMeeting((prev) => ({ ...prev, status: 'completed' }))
-        setTab('insights')
-        toast({ title: 'Analysis complete', variant: 'success' })
+        setTab('intelligence')
+        toast({ title: 'Intelligence extracted', variant: 'success' })
       } else {
         toast({ title: 'Analysis failed', description: data.error, variant: 'error' })
       }
@@ -262,7 +288,8 @@ export function MeetingWorkspace({ meeting: initialMeeting, notes: initialNotes,
           {[
             { id: 'notes' as Tab, label: 'Notes', icon: FileText },
             { id: 'transcript' as Tab, label: 'Transcript', icon: Mic },
-            { id: 'insights' as Tab, label: 'Insights', icon: Lightbulb },
+            { id: 'intelligence' as Tab, label: 'Intelligence', icon: Brain },
+            { id: 'insights' as Tab, label: 'Summary', icon: Lightbulb },
             { id: 'actions' as Tab, label: `Actions${actionItems.length ? ` (${actionItems.length})` : ''}`, icon: CheckSquare },
             { id: 'followup' as Tab, label: 'Follow-up', icon: Share },
           ].map((t) => (
@@ -304,6 +331,13 @@ export function MeetingWorkspace({ meeting: initialMeeting, notes: initialNotes,
             transcript={transcript}
             meeting={meeting}
             onTranscriptUpdate={(t) => setTranscript(t)}
+          />
+        )}
+        {tab === 'intelligence' && (
+          <IntelligencePanel
+            insights={insights}
+            onGenerate={generateInsights}
+            generating={generating}
           />
         )}
         {tab === 'insights' && (
