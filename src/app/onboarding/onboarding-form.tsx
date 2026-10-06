@@ -59,8 +59,7 @@ export function OnboardingForm({ userEmail, userName }: { userEmail: string; use
 
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({ ...values, onboarding_completed: true })
-      .eq('id', user.id)
+      .upsert({ id: user.id, email: user.email!, ...values, onboarding_completed: true })
 
     if (updateError) {
       setError('Failed to save. Please try again.')

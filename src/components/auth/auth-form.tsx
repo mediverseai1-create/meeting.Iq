@@ -46,17 +46,14 @@ export function SignupForm() {
 
   async function onSubmit(values: SignupValues) {
     setError(null)
-    const supabase = createClient()
-    const { error: signupError } = await supabase.auth.signUp({
-      email: values.email,
-      password: values.password,
-      options: {
-        data: { full_name: values.full_name },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
-      },
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
     })
-    if (signupError) {
-      setError(signupError.message)
+    const json = await res.json()
+    if (!res.ok || json.error) {
+      setError(json.error || 'Signup failed. Please try again.')
     } else {
       setSuccess(true)
     }

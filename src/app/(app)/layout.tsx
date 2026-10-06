@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .eq('id', user.id)
     .single()
 
-  if (profile && !profile.onboarding_completed) redirect('/onboarding')
+  if (!profile || !profile.onboarding_completed) redirect('/onboarding')
 
   return (
     <ToastProvider>
