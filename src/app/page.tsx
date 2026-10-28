@@ -1,10 +1,42 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import {
+  Brain, Target, Mail, Database, TrendingUp, AlertTriangle,
+  Building2, PhoneCall, Briefcase, Layers, Users, Lightbulb,
+  FileText, Sparkles, Check, X, ArrowRight, Search,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'MeetingIQ – AI Meeting Execution Platform',
   description: 'MeetingIQ understands your business conversations and uses AI agents to turn them into executed actions — decisions captured, commitments tracked, workflows triggered automatically.',
 }
+
+const HOW_STEPS: { n: string; Icon: LucideIcon; text: string; sub: string }[] = [
+  { n: '01', Icon: FileText,   text: 'Paste transcript or record audio',  sub: 'From Zoom, Teams, Google Meet, or type notes directly' },
+  { n: '02', Icon: Brain,      text: 'AI reads every signal',             sub: 'Decisions, commitments, risks, buying signals, objections' },
+  { n: '03', Icon: Target,     text: 'Intelligence is structured',        sub: 'Named owners, deadlines, severities — nothing abstract' },
+  { n: '04', Icon: Mail,       text: 'Follow-up is executed',             sub: 'Email drafted, actions created, risks flagged automatically' },
+  { n: '05', Icon: Database,   text: 'Memory grows smarter',             sub: 'Ask questions across all meetings in plain English' },
+]
+
+const AGENTS: { Icon: LucideIcon; name: string; desc: string }[] = [
+  { Icon: Brain,         name: 'Meeting Intelligence Agent', desc: 'Reads every conversation and extracts decisions, commitments, risks, buying signals, objections, and open issues — structured and ready to act on.' },
+  { Icon: Target,        name: 'Commitment Agent',           desc: 'Identifies every promise made — who, what, by when. Tracks completion and surfaces overdue commitments before they become problems.' },
+  { Icon: Mail,          name: 'Follow-Up Agent',            desc: 'Drafts professional follow-up emails and meeting recaps based on actual content — tailored to the meeting type and participants.' },
+  { Icon: TrendingUp,    name: 'Sales Intelligence Agent',   desc: 'Detects buying signals, concerns, deal risks, and customer requirements. Gives sales teams real intelligence, not just transcripts.' },
+  { Icon: AlertTriangle, name: 'Risk Intelligence Agent',    desc: 'Surfaces risks — timeline slippages, budget concerns, relationship friction — categorized by severity before they escalate.' },
+  { Icon: Database,      name: 'Executive Memory Agent',     desc: 'Builds persistent organizational memory. Ask why a decision was made or what a client requested three meetings ago.' },
+]
+
+const USE_CASES: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: PhoneCall,  title: 'Sales Calls',        desc: 'Capture buying signals, objections, and deal requirements. Know where every deal stands without manually updating CRM.' },
+  { Icon: Briefcase,  title: 'Executive Reviews',  desc: 'Log strategic decisions and commitments from leadership. Build a searchable archive of organizational intelligence across quarters.' },
+  { Icon: Layers,     title: 'Project Standups',   desc: 'Track blockers, commitments, and risks across your sprint cycle. Automated status summaries without extra effort.' },
+  { Icon: Users,      title: 'Client Meetings',    desc: 'Never forget a client request or commitment. Full history of every promise made, requirement raised, and concern expressed.' },
+  { Icon: Lightbulb,  title: 'Product Reviews',    desc: 'Capture feature requests, edge cases, and product decisions. Turn every review into a structured backlog of insights.' },
+  { Icon: Building2,  title: 'Board Meetings',     desc: 'Maintain a precise record of investor questions, board decisions, and strategic commitments. Always know who committed to what.' },
+]
 
 export default function LandingPage() {
   return (
@@ -68,7 +100,9 @@ export default function LandingPage() {
                   <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">AI Intelligence</p>
                   <p className="text-white font-black text-xl mt-0.5">Q4 Strategy Review</p>
                 </div>
-                <span className="text-xs font-black bg-[#d4f84a] text-[#0a0520] px-3 py-1.5 rounded-full">Analyzed ✓</span>
+                <span className="text-xs font-black bg-[#d4f84a] text-[#0a0520] px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Analyzed
+                </span>
               </div>
               <div className="space-y-3 mb-4">
                 {[
@@ -90,7 +124,7 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-white/10">
                 <span>Analyzed 4 minutes ago</span>
-                <span className="text-[#d4f84a] font-black">View full report →</span>
+                <span className="text-[#d4f84a] font-black flex items-center gap-1">View full report <ArrowRight className="w-3 h-3" /></span>
               </div>
             </div>
           </div>
@@ -100,19 +134,15 @@ export default function LandingPage() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           SECTION 2 — Electric blue (like Linktree)
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="bg-[#1a56db] py-24 overflow-hidden">
+      <section id="how" className="bg-[#1a56db] py-24 overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
           {/* Left — step list visual */}
           <div className="bg-white/10 rounded-3xl p-6 border border-white/10 space-y-3">
-            {[
-              { n: '01', icon: '📖', text: 'Paste transcript or record audio', sub: 'From Zoom, Teams, Google Meet, or type notes directly' },
-              { n: '02', icon: '🧠', text: 'AI reads every signal', sub: 'Decisions, commitments, risks, buying signals, objections' },
-              { n: '03', icon: '🎯', text: 'Intelligence is structured', sub: 'Named owners, deadlines, severities — nothing abstract' },
-              { n: '04', icon: '✉️', text: 'Follow-up is executed', sub: 'Email drafted, actions created, risks flagged automatically' },
-              { n: '05', icon: '🏛️', text: 'Memory grows smarter', sub: 'Ask questions across all meetings in plain English' },
-            ].map((step) => (
+            {HOW_STEPS.map((step) => (
               <div key={step.n} className="flex items-center gap-4 bg-white/10 rounded-2xl px-4 py-3">
-                <span className="text-xl shrink-0">{step.icon}</span>
+                <div className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                  <step.Icon className="h-4 w-4 text-white" />
+                </div>
                 <div className="flex-1">
                   <p className="font-black text-white text-sm">{step.text}</p>
                   <p className="text-blue-200 text-xs mt-0.5">{step.sub}</p>
@@ -133,7 +163,7 @@ export default function LandingPage() {
             </p>
             <Link href="/signup" className="inline-flex items-center gap-2 bg-[#d4f84a] text-[#0a0520] font-black px-8 py-4 rounded-full text-base hover:bg-[#c5e840] transition-colors">
               Get started free
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -182,16 +212,11 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { icon: '🧠', name: 'Meeting Intelligence Agent', desc: 'Reads every conversation and extracts decisions, commitments, risks, buying signals, objections, and open issues — structured and ready to act on.' },
-              { icon: '🎯', name: 'Commitment Agent', desc: 'Identifies every promise made — who, what, by when. Tracks completion and surfaces overdue commitments before they become problems.' },
-              { icon: '✉️', name: 'Follow-Up Agent', desc: 'Drafts professional follow-up emails and meeting recaps based on actual content — tailored to the meeting type and participants.' },
-              { icon: '📈', name: 'Sales Intelligence Agent', desc: 'Detects buying signals, concerns, deal risks, and customer requirements. Gives sales teams real intelligence, not just transcripts.' },
-              { icon: '⚠️', name: 'Risk Intelligence Agent', desc: 'Surfaces risks — timeline slippages, budget concerns, relationship friction — categorized by severity before they escalate.' },
-              { icon: '🏛️', name: 'Executive Memory Agent', desc: 'Builds persistent organizational memory. Ask why a decision was made or what a client requested three meetings ago.' },
-            ].map((a) => (
+            {AGENTS.map((a) => (
               <div key={a.name} className="bg-white/10 border border-white/10 rounded-2xl p-6 hover:bg-white/15 transition-colors">
-                <div className="text-4xl mb-4">{a.icon}</div>
+                <div className="h-11 w-11 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+                  <a.Icon className="h-5 w-5 text-white" />
+                </div>
                 <h3 className="font-black text-white text-base mb-2">{a.name}</h3>
                 <p className="text-indigo-200 text-sm leading-relaxed">{a.desc}</p>
               </div>
@@ -214,7 +239,7 @@ export default function LandingPage() {
             </p>
             <Link href="/signup" className="inline-flex items-center gap-2 bg-[#0a0520] text-white font-black px-8 py-4 rounded-full text-base hover:bg-[#4f46e5] transition-colors">
               Try it free
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -223,7 +248,7 @@ export default function LandingPage() {
               <ul className="space-y-3">
                 {['Records audio', 'Transcribes speech', 'Generates a summary', 'Lists action items', 'You follow up manually', 'Memory: none'].map((i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                    <span className="text-slate-300 font-black shrink-0">✗</span>{i}
+                    <X className="h-3.5 w-3.5 text-slate-300 shrink-0 mt-0.5" />{i}
                   </li>
                 ))}
               </ul>
@@ -234,7 +259,7 @@ export default function LandingPage() {
               <ul className="space-y-3">
                 {['Understands business meaning', 'Extracts commitments + owners', 'Identifies risks by severity', 'Detects buying signals', 'AI drafts follow-up emails', 'Persistent org memory'].map((i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-slate-800 font-semibold">
-                    <span className="text-[#4f46e5] font-black shrink-0">✓</span>{i}
+                    <Check className="h-3.5 w-3.5 text-[#4f46e5] shrink-0 mt-0.5" />{i}
                   </li>
                 ))}
               </ul>
@@ -255,16 +280,11 @@ export default function LandingPage() {
             <p className="text-[#0a0520]/60 text-xl font-medium max-w-lg">MeetingIQ adapts its intelligence to whatever meeting you&apos;re in.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { icon: '🤝', title: 'Sales Calls', desc: 'Capture buying signals, objections, and deal requirements. Know where every deal stands without manually updating CRM.' },
-              { icon: '👔', title: 'Executive Reviews', desc: 'Log strategic decisions and commitments from leadership. Build a searchable archive of organizational intelligence across quarters.' },
-              { icon: '🏗️', title: 'Project Standups', desc: 'Track blockers, commitments, and risks across your sprint cycle. Automated status summaries without extra effort.' },
-              { icon: '👥', title: 'Client Meetings', desc: 'Never forget a client request or commitment. Full history of every promise made, requirement raised, and concern expressed.' },
-              { icon: '🧪', title: 'Product Reviews', desc: 'Capture feature requests, edge cases, and product decisions. Turn every review into a structured backlog of insights.' },
-              { icon: '💼', title: 'Board Meetings', desc: 'Maintain a precise record of investor questions, board decisions, and strategic commitments. Always know who committed to what.' },
-            ].map((uc) => (
+            {USE_CASES.map((uc) => (
               <div key={uc.title} className="bg-[#0a0520] rounded-2xl p-6 hover:bg-[#1a0a40] transition-colors">
-                <div className="text-3xl mb-4">{uc.icon}</div>
+                <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center mb-4">
+                  <uc.Icon className="h-5 w-5 text-[#d4f84a]" />
+                </div>
                 <h3 className="font-black text-white text-base mb-2">{uc.title}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{uc.desc}</p>
               </div>
@@ -294,7 +314,7 @@ export default function LandingPage() {
                 '"What risks have we identified in the infrastructure project?"',
               ].map((q) => (
                 <div key={q} className="flex items-start gap-3 bg-white/5 rounded-xl px-4 py-3 border border-white/10">
-                  <span className="text-[#d4f84a] font-black shrink-0">→</span>
+                  <ArrowRight className="h-4 w-4 text-[#d4f84a] shrink-0 mt-0.5" />
                   <p className="text-sm text-slate-300 italic">{q}</p>
                 </div>
               ))}
@@ -307,18 +327,22 @@ export default function LandingPage() {
           {/* Memory mockup */}
           <div className="bg-[#140d35] rounded-3xl p-6 border border-white/10 shadow-2xl">
             <div className="flex items-center gap-3 mb-5">
-              <div className="h-9 w-9 bg-[#d4f84a] rounded-xl flex items-center justify-center text-lg">🏛️</div>
+              <div className="h-9 w-9 bg-[#d4f84a] rounded-xl flex items-center justify-center">
+                <Database className="h-4.5 w-4.5 text-[#0a0520] h-5 w-5" />
+              </div>
               <div>
                 <p className="text-white font-black">Company Memory</p>
                 <p className="text-slate-500 text-xs">47 meetings indexed</p>
               </div>
             </div>
             <div className="bg-white/5 rounded-xl border border-white/10 px-4 py-3 mb-4 flex items-center gap-2">
-              <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <span className="text-slate-400 text-sm">Ask anything about your meeting history…</span>
             </div>
             <div className="bg-white/5 rounded-2xl p-5 border border-white/5">
-              <p className="text-xs text-[#d4f84a] font-black mb-3 flex items-center gap-1.5">🧠 AI Answer</p>
+              <p className="text-xs text-[#d4f84a] font-black mb-3 flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3" /> AI Answer
+              </p>
               <p className="text-sm text-slate-300 leading-relaxed mb-4">
                 The enterprise tier was postponed in the <span className="text-[#d4f84a] font-semibold">Oct Board Review</span> due to insufficient engineering capacity. Marcus committed to revisiting after the Q1 hire (see <span className="text-[#d4f84a] font-semibold">Nov 12 Planning</span>).
               </p>
@@ -363,13 +387,13 @@ export default function LandingPage() {
                   <p className={`text-sm font-black mb-2 ${plan.highlight ? 'text-slate-400' : 'text-slate-500'}`}>{plan.name}</p>
                   <div className="flex items-end gap-1">
                     <span className={`text-5xl font-black ${plan.highlight ? 'text-white' : 'text-[#0a0520]'}`}>{plan.price}</span>
-                    {plan.period && <span className={`text-base mb-2 font-medium ${plan.highlight ? 'text-slate-400' : 'text-slate-400'}`}>{plan.period}</span>}
+                    {plan.period && <span className="text-base mb-2 font-medium text-slate-400">{plan.period}</span>}
                   </div>
                 </div>
                 <ul className="space-y-2.5 flex-1 mb-7">
                   {plan.features.map((f) => (
                     <li key={f} className={`flex items-start gap-2 text-sm font-medium ${plan.highlight ? 'text-slate-300' : 'text-slate-600'}`}>
-                      <span className={`font-black shrink-0 mt-0.5 ${plan.highlight ? 'text-[#d4f84a]' : 'text-[#4f46e5]'}`}>✓</span>{f}
+                      <Check className={`h-3.5 w-3.5 shrink-0 mt-0.5 ${plan.highlight ? 'text-[#d4f84a]' : 'text-[#4f46e5]'}`} />{f}
                     </li>
                   ))}
                 </ul>
@@ -455,7 +479,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/signup" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#0a0520] text-[#d4f84a] font-black px-10 py-4 rounded-full text-lg hover:bg-[#1a0a40] transition-colors">
               Get started free
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/pricing" className="w-full sm:w-auto inline-flex items-center justify-center bg-white/50 text-[#0a0520] font-black px-10 py-4 rounded-full text-lg hover:bg-white/70 transition-colors">
               View pricing
@@ -474,7 +498,7 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="h-8 w-8 rounded-xl bg-[#d4f84a] flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 fill-[#0a0520]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#0a0520]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
                 </div>
                 <span className="font-black text-white text-xl">MeetingIQ</span>
               </div>
